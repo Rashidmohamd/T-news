@@ -77,7 +77,7 @@ userSchema.statics.signUp = async function (info) {
     if (!city) throw Error("please fill up the field");
     if (!country) throw Error("please enter your current country name");
     if (!nationality) throw Error("nationality is required ");
-    if (!password) { throw Error('you can not have account with password so fill the password field ') } else if (password.length <= 4 ){
+    if (!password) { throw Error('you can not have account without password so fill the password field ') } else if (password.length <= 4 ){
         throw Error('please a strong password more 4 charaicters or digit or symbols')
     };
     if (!age) {
@@ -85,7 +85,7 @@ userSchema.statics.signUp = async function (info) {
     } else if (age < 18) throw Error("sorry you can not create an account as long as your are under 18 :(");
 
     const inUse = await this.findOne({ email });
-    if (inUse) throw Error("sorry this email is already in use you can not have more than 1 aounts with 1 email :(");
+    if (inUse) throw Error("sorry this email is already in use you can not have more than 1 accounts with 1 email :(");
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);

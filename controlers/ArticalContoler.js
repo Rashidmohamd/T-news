@@ -19,7 +19,7 @@ const deleteArticaleAuto = async () => {
     })
     trying;
 }
-// setInterval(deleteArticaleAuto, 18000000);
+setInterval(deleteArticaleAuto, 18000000);
 
 //creating articale
 const createArticale = async (req, res) => {
@@ -70,7 +70,9 @@ const deleteArticale = async(req, res)=> {
     try {
         const deleted = await Articale.findOneAndDelete({ _id: id, userId });
         if (deleted) {
-            res.send();
+            await Comment.deleteMany({ articaleId: deleted.articaleId });
+            await Like.deleteMany({ articaleId: deleted.articaleId });
+            res.send(deleted);
         }
     } catch (err) {
         res.status(404).json({error:err.message})

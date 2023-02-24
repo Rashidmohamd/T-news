@@ -12,7 +12,7 @@ const app = express();
     
 
 // middlewares
-app.use(cors());
+app.use(cors({origin:"https://dulcet-brioche-c4c7ad.netlify.app"}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //     secret: process.env.SECRET,
