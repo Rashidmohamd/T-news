@@ -78,6 +78,7 @@ const activating = async (req, res) => {
     try {
         const { verifyCode } = req.body;
         if (!verifyCode) throw Error("you must send verification code which we send your email account  ...");
+        if(!req.headers.authorization)throw Error("sorry you must send sign-up token with request headers either you can not activate your account :( ")
         const tkn = req.headers.authorization.split(" ")[1];
         const { _id } = jwt.verify(tkn, process.env.SECRET);
         const user = await User.findOneAndUpdate({ _id,confirmed:verifyCode }, {
@@ -91,6 +92,47 @@ const activating = async (req, res) => {
         if (user.confirmed === verifyCode) {
             const { email, firstName, lastName, age, country, city, gender, nationality, picture, createdAt, updatedAt } = user;
             res.status(201).json({ email, firstName, lastName, age, country, city, gender, nationality, picture, createdAt, updatedAt, token: innertokn });
+        }
+    } catch (err) {
+        res.status(400).json({error:err.message})
+    }
+}
+//Resend-Password
+const resendPassword = async (req, res) => {
+    const signToken = req.headers.authorization;
+    try {
+        if (!signToken) throw Error("sorry you must send sign-up token with request headers to activate your acount either you can not activate it");
+        const token = signToken.split(' ')[1];
+        const { _id } = jwt.verify(token, process.env.SECRET);
+        const user = await User.findById(_id);
+        if (user) {
+            const info = await transproter.sendMail({
+                from: "'TG news ' <rashid7252000@gmail.com>",
+                to: user.email,
+                subject: "Verification code",
+                text: "Use this code to log in your account then you can modify your password later when log-in",
+                html:`<h1>Here is your verification code ${user.confirmed}</h1>`
+            })
+            if (info) {
+                res.send({ msg: "The verification code has been sent to your email account check your inbox if you have not recieved it yet Please try reset and sign-up again thank you!! "});
+            }
+        }else {
+            throw Error("no user found")
+        }
+        
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
+//deleting un - activated account
+const deleteUnactive = async (req,res) => {
+    try {
+        if (!req.headers.authorization) throw Error("sorry you must send token with request headers to be authorized !!");
+        const token = req.headers.authorization.split(' ')[0];
+        const { _id } = jwt.verify(token, process.env.SECRET);
+        if (_id) {
+            const user = await User.findByIdAndDelete(_id);
+            if(user)res.send()
         }
     } catch (err) {
         res.status(400).json({error:err.message})
@@ -223,6 +265,8 @@ const resetPassword = async (req, res) => {
 }
 //exporting controlers 
 module.exports = {
+    resetPassword,
+    deleteUnactive,
     sign,
     resetPassword,
     getMe,
