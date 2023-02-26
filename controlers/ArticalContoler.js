@@ -68,10 +68,10 @@ const deleteArticale = async(req, res)=> {
     const { id } = req.params;
     const { userId } = req;
     try {
-        const deleted = await Articale.findOneAndDelete({ _id: id, userId });
+        const deleted = await Articale.findOneAndDelete({ _id: id, userId }).select(['-img']);
         if (deleted) {
-            await Comment.deleteMany({ articaleId: deleted.articaleId });
-            await Like.deleteMany({ articaleId: deleted.articaleId });
+            await Comment.deleteMany({ articaleId: deleted._id});
+            await Like.deleteMany({ articaleId: deleted._id });
             res.send(deleted);
         }
     } catch (err) {

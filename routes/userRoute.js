@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require("multer");
-const { sign, log, forgot, activating, logout,modifyMe,allUsers,deleteMe,getMe, resetPassword ,resetPassword,deleteUnactive} = require("../controlers/userControler");
+const { sign, log, forgot, activating, logout,modifyMe,allUsers,deleteMe,getMe, resetPassword ,resendPassword,deleteUnactive} = require("../controlers/userControler");
 const authorize = require("../middleware/userMiddle")
 
 const storage = multer.memoryStorage();
@@ -15,7 +15,7 @@ router.post("/log-in", log);
 //forgoting password
 router.post("/forgot-password", forgot);
 //resend password
-router.get('/resend-password', resetPassword);
+router.get('/resend-password', resendPassword);
 //deleting un-Active user
 router.delete('/delete-unactive', deleteUnactive);
 //authorizer for protected routes 

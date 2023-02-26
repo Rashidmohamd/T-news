@@ -98,7 +98,6 @@ userSchema.statics.signUp = async function (info) {
             
         }:{},gender,city,age,confirmed
     })
-    console.log(picture)
     const sav = await user.save()
     return sav;
 

@@ -90,8 +90,8 @@ const activating = async (req, res) => {
         const innertokn = innerToken(_id);
         if(!user)throw Error('sorry this user is already activated')
         if (user.confirmed === verifyCode) {
-            const { email, firstName, lastName, age, country, city, gender, nationality, picture, createdAt, updatedAt } = user;
-            res.status(201).json({ email, firstName, lastName, age, country, city, gender, nationality, picture, createdAt, updatedAt, token: innertokn });
+            const { email, firstName, lastName, age, country, city, gender, nationality, picture, createdAt, updatedAt,_id } = user;
+            res.status(201).json({ email, firstName, lastName, age, country, city, gender, nationality, picture, createdAt, updatedAt, _id,token: innertokn });
         }
     } catch (err) {
         res.status(400).json({error:err.message})
@@ -265,7 +265,7 @@ const resetPassword = async (req, res) => {
 }
 //exporting controlers 
 module.exports = {
-    resetPassword,
+    resendPassword,
     deleteUnactive,
     sign,
     resetPassword,

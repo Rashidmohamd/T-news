@@ -36,7 +36,7 @@ app.use("/TG-news", likeRoute);
 
 const port = process.env.PORT || 8000;
 //connecting to db and listening
-mongoose.connect(process.env.DBuri, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.LocalDb, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(res => {
         console.log('connected to the DB successfully ....');
         app.listen(port, (err) => {
