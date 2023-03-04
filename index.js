@@ -9,10 +9,8 @@ const commentRouter = require("./routes/commentRoute");
 const likeRoute = require("./routes/likesRoute");
 
 const app = express();
-    
-
 // middlewares
-app.use(cors({origin: process.env.ALLOWED_ENDPOINT}));
+app.use(cors({origin: process.env.ALLOWED_URL}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 //     secret: process.env.SECRET,
@@ -36,7 +34,7 @@ app.use("/TG-news", likeRoute);
 
 const port = process.env.PORT || 8000;
 //connecting to db and listening
-mongoose.connect(process.env.LocalDb, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.DBuri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(res => {
         console.log('connected to the DB successfully ....');
         app.listen(port, (err) => {

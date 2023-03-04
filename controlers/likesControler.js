@@ -45,7 +45,6 @@ const getLikes = async (req, res) => {
     
     try {
         const fin = await Like.find(); 
-        if (fin.length <= 0) throw Error("sorry likes to show");
         res.send(fin);
     } catch (err) {
         res.status(404).json({error:err.message})

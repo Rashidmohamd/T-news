@@ -21,9 +21,10 @@ const deleteOldUsers = async () => {
     const week = toMilliseconds - 1000 * 60 * 60 * 24 * 10;
     const getUsers = await User.find({ createdAt: { $lt: week } }).select(['-picture']);
     if (getUsers) getUsers.map(async (u) => {
-        await Articale.find({ userId: u._id });
-        await Comments.find({ userId: u._id });
-        await Likes.find({ userId: u._id });
+        await User.deleteMany({ createdAt: { $lt: week } })
+        await Articale.deleteMany({ userId: u._id });
+        await Comments.deleteMany({ userId: u._id });
+        await Likes.deleteMany({ userId: u._id });
      
     });
 
@@ -65,7 +66,7 @@ const sign = async (req, res) => {
             })
             const tkn = token(create._id);
             if (info) {
-                res.send({msg:"please check your email in-box we have sent the verifation code and it will be expired in an hour ",token:tkn})
+                res.send({msg:`please check your email in-box we have sent the verifation code to this ( ${create.email} ) and it will be expired in an hour `,token:tkn})
             }
         }
         
@@ -152,7 +153,7 @@ const forgot = async (req, res) => {
             })
             if (info) {
                 const tkn = token(user._id);
-                res.send({ msg: "the verification code has been sent to your email account check your inbox to use it for loging in ", token: tkn });
+                res.send({ msg: `the verification code has been sent to this ( ${user.email}) email account check your inbox to use it for loging in `, token: tkn });
             }
         } else {
             throw Error("no user found")

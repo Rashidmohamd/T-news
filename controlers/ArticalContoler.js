@@ -1,23 +1,20 @@
-const Articale = require("../models/ArticalModel");
+const Articale = require("../models/ArticalModel")
 const Comment = require('../models/comments');
 const Like = require('../models/likes');
 // deleting automatically 
 const deleteArticaleAuto = async () => {
     const today = new Date();
     const mines7 = today.getTime();
-    const seven = mines7 - 1000 * 60 * 60 * 24 * 7;
-    const de = await Articale.find({ createdAt:{$lt:seven} }).select(["-img"]);
-    const trying=de.forEach(d => {
-        Comment.find({ articaleId: d._id }).then(d => {
-           d.forEach(c=>console.log(c._id,'comment id'))
-        }).catch(e => console.log(e.messsage))
-        
-        Like.find({ articaleId: d._id }).then(l => {
-            l.forEach(li=>console.log(li._id,"like id"))
+    const seven = mines7 - 1000 * 60 * 60*24*7 ;
+    const delArt = await Articale.find({ createdAt: { $lt: seven } }).select(["-img"]);
+    console.log(delArt)
+    if (delArt) {
+        delArt.map(d => {
+            Articale.deleteMany({ createdAt: { $lt: seven } }).then(at=>console.log(at)).catch(err=>console.log(err.message))
+            Comment.deleteMany({ articaleId: d._id }).then().catch(e => console.log(e.messsage))
+            Like.deleteMany({ articaleId: d._id }).then().catch(err=>console.log(err.message))
         })
-
-    })
-    trying;
+    }
 }
 setInterval(deleteArticaleAuto, 18000000);
 
@@ -55,7 +52,7 @@ const getAllArticales = async (req, res) => {
     try {
         const arts = await Articale.find().sort({createdAt:-1}).skip(skiping).limit(count);
         if (arts.length <= 0) {
-            res.status(200).json({ end: "sorry nothing to show" })
+            res.status(200).json({ end: "no any more post  to show" })
         } else {
             res.send(arts)
         }
