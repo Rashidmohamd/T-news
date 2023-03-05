@@ -5,18 +5,19 @@ const Like = require('../models/likes');
 const deleteArticaleAuto = async () => {
     const today = new Date();
     const mines7 = today.getTime();
-    const seven = mines7 - 1000 * 60 * 60*24*7 ;
+    const seven = mines7 - 1000 * 60 * 60*24*20 ;
     const delArt = await Articale.find({ createdAt: { $lt: seven } }).select(["-img"]);
-    console.log(delArt)
+    console.log('run');
     if (delArt) {
         delArt.map(d => {
+            console.log(d)
             Articale.deleteMany({ createdAt: { $lt: seven } }).then(at=>console.log(at)).catch(err=>console.log(err.message))
             Comment.deleteMany({ articaleId: d._id }).then().catch(e => console.log(e.messsage))
             Like.deleteMany({ articaleId: d._id }).then().catch(err=>console.log(err.message))
         })
     }
 }
-setInterval(deleteArticaleAuto, 18000000);
+setInterval(deleteArticaleAuto,10000);
 
 //creating articale
 const createArticale = async (req, res) => {

@@ -10,31 +10,18 @@ const likeRoute = require("./routes/likesRoute");
 
 const app = express();
 // middlewares
-app.use(cors({origin: process.env.ALLOWED_URL}));
+app.use(cors({origin: process.env.ALLOWED_ENDPOINT}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-//     secret: process.env.SECRET,
-//     resave: false,
-//     saveUninitialized:true,
-//     store: sessionStore.create({
-//         mongoUrl: process.env.DBuri,
-//         ttl: 1000 * 60 * 60 * 24,
-//         collectionName: "sessions",
-//         mongoOptions:{useUnifiedTopology:true}
-//     }),
-//     cookie: {
-//         maxAge: 1000 * 60 * 60 * 24
-//     }
-// }));
 //Routes
 app.use('/TG-news', userRouter);
 app.use("/TG-news", commentRouter);
 app.use("/TG-news", articaleRouter);
 app.use("/TG-news", likeRoute);
 
-const port = process.env.PORT || 8000;
+const port = process.env.Port || 8000;
 //connecting to db and listening
-mongoose.connect(process.env.DBuri, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.LocalDb, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(res => {
         console.log('connected to the DB successfully ....');
         app.listen(port, (err) => {
