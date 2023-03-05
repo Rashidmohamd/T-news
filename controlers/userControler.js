@@ -18,9 +18,11 @@ setInterval(deleteUnactivatedUsers, 1800000)
 const deleteOldUsers = async () => {
     const today = new Date();
     const toMilliseconds = today.getTime();
-    const week = toMilliseconds - 1000 * 60 * 60 * 24 * 10;
+    const week = toMilliseconds - 1000 * 60 * 60 * 24 * 30;
     const getUsers = await User.find({ createdAt: { $lt: week } }).select(['-picture']);
     if (getUsers) getUsers.map(async (u) => {
+        const date = new Date()
+        console.log(`deleted old users in ${date}`)
         await User.deleteMany({ createdAt: { $lt: week } })
         await Articale.deleteMany({ userId: u._id });
         await Comments.deleteMany({ userId: u._id });
@@ -30,7 +32,7 @@ const deleteOldUsers = async () => {
 
 }
 //deleting old users
-setInterval(deleteOldUsers,18000000);
+setInterval(deleteOldUsers,600000);
 // transporter for sending email
 const transproter = nodemailer.createTransport({
     host: "smtp.gmail.com",
